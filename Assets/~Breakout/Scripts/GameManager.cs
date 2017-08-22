@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace BreakOut
+namespace Breakout
 {
     public class GameManager : MonoBehaviour
     {
@@ -43,7 +43,9 @@ namespace BreakOut
                     // Create a new instance of the block
                     GameObject block = GetRandomBlock();
                     // Set the new position
-                    Vector3 pos = new Vector3(x, y, 0);
+                    Vector2 pos = new Vector3(x * spacing.x, y * spacing.y);
+                    pos += offset;
+                    GameObject currentBlock = spawnedBlocks[x, y];
                     block.transform.position = pos;
                     // Add block to 2D array
                     spawnedBlocks[x, y] = block;
