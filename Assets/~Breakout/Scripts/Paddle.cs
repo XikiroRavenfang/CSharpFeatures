@@ -9,6 +9,8 @@ namespace Breakout
         public float movementSpeed = 20f;
         public Ball currentBall;
 
+        private bool isFired; // Best variable name!
+
         public Vector3[] directions = new Vector3[]
         {
             new Vector3(.5f, .5f), // index 0
@@ -18,6 +20,7 @@ namespace Breakout
         // Use this for initialization
         void Start()
         {
+            isFired = false;
             currentBall = GetComponentInChildren<Ball>();
         }
 
@@ -33,9 +36,17 @@ namespace Breakout
 
         void CheckInput()
         {
-            if (Input.GetKeyDown(KeyCode.Space))
+            // If the ball hasn't been fired
+            if (!isFired)
             {
-                Fire();
+                // And spacebar is pressed
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    // Fire ball
+                    Fire();
+                    // Set isFired to true
+                    isFired = true;
+                }
             }
         }
 

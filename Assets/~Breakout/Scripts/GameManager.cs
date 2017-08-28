@@ -14,11 +14,13 @@ namespace Breakout
         [Header("Debugging")]
         public bool isDebugging = false;
 
+        private int Score;
         private GameObject[,] spawnedBlocks;
 
         // Use this for initialization
         void Start()
         {
+            Score = 0;
             GenerateBlocks();
         }
 
@@ -74,6 +76,12 @@ namespace Breakout
             {
                 UpdateBlocks();
             }
+        }
+
+        public void IncreaseScore()
+        {
+            // Increases score... and nothing else
+            Score++;
         }
     }
 }
