@@ -8,13 +8,29 @@ namespace Billiards
     public class Ball : MonoBehaviour
     {
         public float stopSpeed = 0.2f;
+        public float maxSpeed = 8f;
 
+        private AudioSource sound;
         private Rigidbody rigid;
 
-        // Use this for initialization
-        void Start()
+        void Awake()
         {
+            sound = GetComponent<AudioSource>();
             rigid = GetComponent<Rigidbody>();
+        }
+
+        void OnCollisionEnter(Collision other)
+        {
+            // If two balls collide
+            if(other.gameObject.tag == "Ball")
+            {
+                // And sound isn't playing
+                if(!sound.isPlaying)
+                {
+                    // Play sound
+                    sound.Play();
+                }
+            }
         }
 
         // Update is called once per frame
@@ -34,6 +50,12 @@ namespace Billiards
             {
                 // Cancel out velocity
                 vel = Vector3.zero;
+            }
+
+            // If my speed is higher than maxSpeed
+            if(vel.magnitude > maxSpeed)
+            {
+                rigid.velocity = vel.normalized * maxSpeed;
             }
 
             // Apply desired 'vel' to rigid's velocity

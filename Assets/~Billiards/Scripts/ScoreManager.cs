@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class ScoreManager : MonoBehaviour
 {
-    private int score = 0;
+    public int score = 0;
+
     private AudioSource sound;
 
     // Use this for initialization
