@@ -9,7 +9,7 @@ public class ScoreManager : MonoBehaviour
     private AudioSource sound;
 
     // Use this for initialization
-    void Start()
+    void Awake()
     {
         sound = GetComponent<AudioSource>();
     }
