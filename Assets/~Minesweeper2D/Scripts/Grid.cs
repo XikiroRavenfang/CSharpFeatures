@@ -24,12 +24,14 @@ namespace Minesweeper2D
         // Update is called once per frame
         void FixedUpdate()
         {
+            /*
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (true)
             {
                 
             }
+            */
         }
 
         // Functionality for spawning tiles
@@ -86,7 +88,7 @@ namespace Minesweeper2D
                     int desiredY = t.y + y;
 
                     // If desired coordinates is within range of tile array length
-                    if (desiredX >= width && desiredY >= height)
+                    if (desiredX > width && desiredY > height)
                     {
                         // If the element at index is a mine
                         if (tiles[x, y].isMine)
