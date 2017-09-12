@@ -6,6 +6,11 @@ namespace Minesweeper2D
 {
     public class Grid : MonoBehaviour
     {
+        public enum MineState
+        {
+            LOSS = 0,
+            WIN = 1
+        }
         public GameObject tilePrefab;
         public int width = 10;
         public int height = 10;
@@ -30,11 +35,26 @@ namespace Minesweeper2D
                 RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
                 if(hit.collider != null)
                 {
-                    Tile tile = hit.collider.gameObject.GetComponent<Tile>();
-                    if(tile != null)
+                    Tile hitTile = hit.collider.GetComponent<Tile>();
+                    if (hitTile != null)
                     {
-                        int adjacentMines = GetAdjacentMineCountAt(tile);
-                        tile.Reveal(adjacentMines);
+                        SelectTile(hitTile);
+                    }
+                }
+            }
+            if (Input.GetMouseButtonDown(1))
+            {
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
+                if (hit.collider != null)
+                {
+                    Tile hitTile = hit.collider.GetComponent<Tile>();
+                    if (hitTile != null)
+                    {
+                        if(!hitTile.isRevealed)
+                        {
+                            hitTile.ToggleFlag();
+                        }
                     }
                 }
             }
@@ -108,6 +128,89 @@ namespace Minesweeper2D
                 }
             }
             return count;
+        }
+
+        public void FFuncover(int x, int y, bool[,] visited)
+        {
+            if(x >= 0 && y >= 0 && x < width && y < height)
+            {
+                if(visited[x, y])
+                {
+                    return;
+                }
+
+                Tile tile = tiles[x, y];
+                int adjacentMines = GetAdjacentMineCountAt(tile);
+                tile.Reveal(adjacentMines);
+
+                if(adjacentMines > 0)
+                {
+                    return;
+                }
+
+                visited[x, y] = true;
+
+                FFuncover(x - 1, y, visited);
+                FFuncover(x + 1, y, visited);
+                FFuncover(x, y - 1, visited);
+                FFuncover(x, y + 1, visited);
+            }
+        }
+
+        // Uncovers all mines that are in the grid
+        public void UncoverMines(int mineState)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    Tile currentTile = tiles[x, y];
+                    if(currentTile.isMine)
+                    {
+                        int adjacentMines = GetAdjacentMineCountAt(currentTile);
+                        currentTile.Reveal(adjacentMines, mineState);
+                    }
+                }
+            }
+        }
+
+        // Detects if there are no more empty tiles in the game
+        bool NoMoreEmptyTiles()
+        {
+            int emptyTileCount = 0;
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    Tile currentTile = tiles[x, y];
+                    if(!currentTile.isRevealed && !currentTile.isMine)
+                    {
+                        emptyTileCount = emptyTileCount + 1;
+                    }
+                }
+            }
+            return emptyTileCount == 0;
+        }
+
+        // Takes in a tile selected by the user in some way to reveal it
+        public void SelectTile(Tile selectedTile)
+        {
+            int adjacentMines = GetAdjacentMineCountAt(selectedTile);
+            selectedTile.Reveal(adjacentMines);
+            if(selectedTile.isMine)
+            {
+                UncoverMines((int)MineState.WIN);
+            }
+            else if(adjacentMines == 0)
+            {
+                int x = selectedTile.x;
+                int y = selectedTile.y;
+                FFuncover(x, y, new bool[width, height]);
+            }
+            if(NoMoreEmptyTiles())
+            {
+                UncoverMines((int)MineState.LOSS);
+            }
         }
     }
 }

@@ -15,8 +15,11 @@ namespace Minesweeper2D
         [Header("References")]
         public Sprite[] emptySprites; // List of empty sprites i.e, empty, 1, 2, 3, 4, etc...
         public Sprite[] mineSprites; // The mine sprites
+        public Sprite baseSprite;
+        public Sprite flagSprite;
 
         private SpriteRenderer rend;
+        private bool isFlagged = false;
 
         void Awake()
         {
@@ -28,7 +31,7 @@ namespace Minesweeper2D
         void Start()
         {
             // Randomly decide if it's a mine or not
-            isMine = Random.value < .05f;
+            isMine = Random.value < .075f;
         }
 
         public void Reveal(int adjacentMines, int mineState = 0)
@@ -44,6 +47,19 @@ namespace Minesweeper2D
             {
                 // Sets sprite to appropriate texture based on adjacent mines
                 rend.sprite = emptySprites[adjacentMines];
+            }
+        }
+
+        public void ToggleFlag()
+        {
+            isFlagged = !isFlagged;
+            if(isFlagged)
+            {
+                rend.sprite = flagSprite;
+            }
+            else
+            {
+                rend.sprite = baseSprite;
             }
         }
 
