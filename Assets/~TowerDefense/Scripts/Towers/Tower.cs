@@ -33,12 +33,12 @@ namespace TowerDefense
 
         Enemy GetClosestEnemy()
         {
+            enemies = RemoveAllNulls(enemies);
+
             Enemy closest = null;
             float minDistance = float.MaxValue;
             foreach (Enemy enemy  in enemies)
             {
-                if (enemy == null) continue;
-
                 float distance = Vector3.Distance(transform.position, enemy.transform.position);
                 if(distance < minDistance)
                 {
@@ -67,6 +67,19 @@ namespace TowerDefense
                 Attack();
                 attackTimer = 0;
             }
+        }
+
+        List<Enemy> RemoveAllNulls(List<Enemy> listWithNulls)
+        {
+            List<Enemy> listWithoutNulls = new List<Enemy>();
+            for (int i = 0; i < listWithNulls.Count; i++)
+            {
+                if(listWithNulls[i] != null)
+                {
+                    listWithoutNulls.Add(listWithNulls[i]);
+                }
+            }
+            return listWithoutNulls;
         }
     }
 }
