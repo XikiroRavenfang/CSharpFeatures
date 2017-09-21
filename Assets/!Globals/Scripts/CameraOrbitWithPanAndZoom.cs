@@ -27,7 +27,7 @@ public class CameraOrbitWithPanAndZoom : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        target.transform.SetParent(null);
+        // target.transform.SetParent(null);
 
         distance = Vector3.Distance(target.transform.position, transform.position);
 
