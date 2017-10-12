@@ -10,8 +10,6 @@ namespace Inheritance
         public float impactForce = 10f;
         public float knockback = 5f;
 
-        private Rigidbody rigid;
-
         public override void Attack()
         {
             // Add force to self
