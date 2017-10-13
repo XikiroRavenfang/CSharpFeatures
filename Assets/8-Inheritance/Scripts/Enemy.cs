@@ -24,7 +24,7 @@ namespace Inheritance
             rigid = GetComponent<Rigidbody>();
         }
 
-        void Update()
+        protected virtual void Update()
         {
             // Increase attack timer
             attackTimer += Time.deltaTime;
