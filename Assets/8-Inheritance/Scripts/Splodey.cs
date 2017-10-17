@@ -13,64 +13,45 @@ namespace Inheritance
         public GameObject splosionParticles;
 
         private float splosionTimer = 0f;
-        private bool isIgnited = false;
 
-        public override void Attack()
+        protected override void OnAttackEnd()
         {
-            // Start ignition timer
-            isIgnited = true;
             // If splosionTimer > splosionRate
-            // Call Explode()
+            if (splosionTimer > splosionRate)
+            {
+                Splode();
+                // Destroy self
+                Destroy(gameObject);
+            }
         }
 
         protected override void Update()
         {
             base.Update();
-            if (isIgnited)
-            {
-                Ignition();
-            }
+            // Start ignition timer
+            splosionTimer += Time.deltaTime;
         }
 
-        void Ignition()
+        void Splode()
         {
-            float distance = Vector3.Distance(transform.position, target.position);
-            if (distance > attackRange)
-            {
-                print("derp");
-                isIgnited = false;
-                splosionTimer = 0;
-            }
-            else
-            {
-                splosionTimer += Time.deltaTime;
-                if (splosionTimer >= splosionRate)
-                {
-                    Explode();
-                }
-            }
-        }
-
-        void Explode()
-        {
-            print("test");
+            // Perform Physics OverlapSphere with splosionRadius
             Collider[] hits = Physics.OverlapSphere(transform.position, splosionRadius);
-            foreach (Collider hit in hits)
+            // Loop through all hits
+            foreach (var hit in hits)
             {
+                Health h = hit.GetComponent<Health>();
                 if (hit.tag == "Player")
                 {
-                    Vector3 direction = target.position - transform.position;
-                    Rigidbody playerRigi = hit.GetComponent<Rigidbody>();
-                    playerRigi.AddForce(direction.normalized * impactForce, ForceMode.Impulse);
+                    if (h != null)
+                    {
+                        h.TakeDamage(damage);
+                    }
+                    Rigidbody r = hit.GetComponent<Rigidbody>();
+                    {
+                        r.AddExplosionForce(impactForce, transform.position, splosionRadius);
+                    }
                 }
             }
-            Destroy(gameObject);
-            // Perform Physics OverlapSphere with splosionRadius
-            // Loop through all hits
-            // If player
-            // Add impact force to rigidbody
-
-            // Destroy self
         }
     }
 }
