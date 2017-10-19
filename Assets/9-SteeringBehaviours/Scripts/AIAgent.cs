@@ -62,7 +62,7 @@ namespace AI
             // IF velocity.magnitude > 0
             if (velocity.magnitude > 0)
             {
-                transform.position = transform.position + velocity * Time.deltaTime;
+                transform.position += velocity * Time.deltaTime;
                 transform.rotation = Quaternion.LookRotation(velocity);
             }
                 // SET transform.position = transform.position + velocity x deltaTime
