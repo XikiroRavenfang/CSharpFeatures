@@ -22,6 +22,7 @@ namespace PaperMarioClone
         private Vector3 movement;
         [HideInInspector]public Vector3 inputDir;
         private bool jump = false;
+        private bool jumpInstant = false;
 
         // Use this for initialization
         void Start()
@@ -57,16 +58,24 @@ namespace PaperMarioClone
                 gravity += Physics.gravity * Time.deltaTime;
             }
 
+            if (jumpInstant)
+            {
+                gravity.y = jumpHeight;
+                jumpInstant = false;
+            }
+
             // Apply movement
             movement += gravity;
             controller.Move(movement * Time.deltaTime);
         }
 
         // Controller Jump
-        public void Jump()
+        public void Jump(bool instant = false)
         {
-            // Jump!
-            jump = true;
+            if (instant)
+                jumpInstant = true;
+            else
+                jump = true;
         }
 
         public void Move(float inputH, float inputV)
