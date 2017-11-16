@@ -60,13 +60,32 @@ namespace MOBA
         // Applies the velocity to agent
         void ApplyVelocity()
         {
+            velocity += force * Time.deltaTime;
+            nav.speed = velocity.magnitude;
 
+            if (velocity.magnitude > maxSpeed)
+            {
+                velocity = velocity.normalized * maxSpeed;
+            }
+
+            if (velocity.magnitude > 0 && nav.updatePosition)
+            {
+                Vector3 pos = transform.position + velocity;
+                NavMeshHit navHit;
+                if (NavMesh.SamplePosition(pos, out navHit, maxDistance, -1))
+                {
+                    nav.SetDestination(navHit.position);
+                }
+            }
         }
 
         // Update
         void Update()
         {
-
+            nav.updatePosition = updatePosition;
+            nav.updateRotation = updateRotation;
+            ComputeForces();
+            ApplyVelocity();
         }
     }
 }
