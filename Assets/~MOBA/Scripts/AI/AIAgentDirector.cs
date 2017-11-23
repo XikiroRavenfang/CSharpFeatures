@@ -32,9 +32,13 @@ namespace MOBA
                 Seek s = agent.GetComponent<Seek>();
                 // Is seek attached to agent?
                 if (s != null)
-                {
                     s.target = target; // Assign target to seek component on agent
-                }
+
+                // PathFollowing
+                PathFollowing p = agent.GetComponent<PathFollowing>();
+                // Is PathFollowing attached to agent?
+                if (p != null)
+                    p.target = target; // Assign target to PathFollowing component on agent
             }
         }
 
